@@ -18,6 +18,7 @@
     "react-native-safe-area-context": "^3.2.0",
     "react-native-tab-view": "^3.1.1",
     "react-native-vector-icons": "^8.1.0",
+    "react-native-view-pdf": "^0.12.2",
     "rn-vertical-slider": "^2.0.2"
   },
   "devDependencies": {

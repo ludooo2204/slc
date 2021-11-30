@@ -6,22 +6,29 @@ import {
   StatusBar,
   StyleSheet,
   FlatList,
-  Text,
+  // Text,
   useColorScheme,
   View,
   Animated,
   Dimensions,
+  Pressable
 } from 'react-native';
 import regression from '../helpers/regression';
 import {
-  CheckBox,
+  Card,
   Input,
   Button,
+  Overlay,
   Slider,
   ButtonGroup,
   Divider,
+  Tooltip,
+  Icon,
+  Text,
 } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+// import Icon from 'react-native-vector-icons/FontAwesome';
+import PDFView from 'react-native-view-pdf';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 export const Vide = () => {
@@ -29,6 +36,7 @@ export const Vide = () => {
   //   const [placeholder, setPlaceholder] = useState('Saisir tension');
   const [value, setValue] = useState(5);
   const [valueString, setValueString] = useState('');
+  const [open, setOpen] = useState(false);
   //   const [debit, setDebit] = useState(0);
   //   const [comment, setComment] = useState('');
   const [selectedIndexCapteur, setIndexCapteur] = useState(1);
@@ -53,6 +61,13 @@ export const Vide = () => {
     [5.705, 8.05e-4, 16.1],
     [5.73, 9.85e-4, 16.1],
   ];
+
+  const [visible, setVisible] = useState(false);
+
+  const toggleOverlay = () => {
+    setVisible(!visible);
+  };
+
   let PiraniLog = [...PIRANI];
   PIRANI.date = '08/11/2021';
   PIRANI.NumRapport = 'FR214513507';
@@ -141,39 +156,112 @@ export const Vide = () => {
           <View
             style={{
               flex: 9,
-            //   flexDirection:"row",
+              //   flexDirection:"row",
               justifyContent: 'center',
               padding: 10,
               margin: 10,
               alignItems: 'center',
               // backgroundColor:"lightgrey"
             }}>
-            <View style={{flex: 10,justifyContent:"center",alignItems:"center"}}>
-              <Text
+            <View>
+        
+      
+              <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
+                <PDFView
+                  style={{
+                    width: windowWidth * 0.85,
+                    height: windowHeight * 0.85,
+                  }}
+                  onError={error => console.log('onError', error)}
+                  onLoad={() => console.log('PDF rendered from url')}
+                  // resource="http://www.pdf995.com/samples/pdf.pdf"
+                  resource="https://lomano.go.yo.fr/sec02c.pdf"
+                  resourceType="url"
+                />
+              </Overlay>
+            </View>
+
+            <View
+              style={{
+                flex: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+                // backgroundColor:"grey"
+              }}>
+              <Pressable style={{flexDirection: 'row'}} onPress={toggleOverlay}>
+                <Icon
+                  // raised
+                  name="file-alt"
+                  type="font-awesome-5"
+                  color="#000"
+                  onPress={() => toggleOverlay()}
+                />
+                <Text
+                  style={{
+                    marginHorizontal: 20,
+                    fontSize: 20,
+                    alignSelf: 'center',
+                  }}>{`${dataEtalonnage[selectedIndexCapteur][0]} du ${dataEtalonnage[selectedIndexCapteur][1]}`}</Text>
+              </Pressable>
+              <Divider
                 style={{
-                  fontSize: 20,
-                  alignSelf: 'center',
-                }}>{`${dataEtalonnage[selectedIndexCapteur][0]} du ${dataEtalonnage[selectedIndexCapteur][1]}`}</Text>
+                  backgroundColor: 'blue',
+                  marginVertical: 10,
+                  width: 100,
+                }}
+              />
 
               <Text
+                //  h2
                 style={{
                   fontSize: 50,
                   alignSelf: 'auto',
                 }}>{`${Math.pow(10, debit).toExponential(2)} mbar`}</Text>
+
+              <Tooltip
+                height={200}
+                backgroundColor={'lightblue'}
+                overlayColor="rgba(250, 250, 250, 0.90)"
+                popover={
+                  <View>
+                    <Text>
+                      L'incertitude est calculé en fonction de ca et de ca
+                    </Text>
+                    <Text>
+                      L'incertitude est calculé en fonction de ca et de ca
+                    </Text>
+                    <Text>
+                      L'incertitude est calculé en fonction de ca et de ca
+                    </Text>
+                    <Text>
+                      L'incertitude est calculé en fonction de ca et de ca
+                    </Text>
+                  </View>
+                }>
+                <Text
+                  style={{
+                    fontSize: 40,
+                    alignSelf: 'auto',
+                  }}>{`Ie = ${Number.parseFloat(debitIncertitude).toFixed(1)} %`}</Text>
+              </Tooltip>
+                  <Divider
+                    style={{
+                      backgroundColor: 'blue',
+                      marginVertical: 10,
+                      width: 100,
+                    }}
+                  />
               <Text
                 style={{
-                  fontSize: 50,
-                  alignSelf: 'auto',
-                }}>{`Ie = ${Math.round(debitIncertitude * 10) / 10} %`}</Text>
-              <Text
-                style={{
-                  fontSize: 30,
+                  fontSize: 40,
                 }}>
-                {`${Math.round(value * 1000) / 1000} V`}
+                {`Tension : ${Number.parseFloat(value).toFixed(3)} V`}
+                {/* {`Tension : ${Math.round(value * 1000) / 1000} V`} */}
               </Text>
             </View>
+
             <View style={{flex: 1, width: '100%', padding: 10}}>
-              <View style={{flexDirection: 'row',height:'100%'}}>
+              <View style={{flexDirection: 'row', height: '100%'}}>
                 <Input
                   containerStyle={{flex: 3}}
                   style={{fontSize: 25, marginLeft: 10}}
@@ -198,6 +286,7 @@ export const Vide = () => {
                   }
                   keyboardType="number-pad"
                 />
+
                 <Button
                   containerStyle={{
                     flex: 1,
@@ -211,7 +300,6 @@ export const Vide = () => {
                 />
               </View>
               <Divider style={{backgroundColor: 'blue', marginVertical: 10}} />
-
             </View>
           </View>
           <View
@@ -219,8 +307,8 @@ export const Vide = () => {
               flex: 1,
               alignItems: 'center',
               justifyContent: 'center',
-            //   marginHorizontal: ,
-            paddingRight:10
+              //   marginHorizontal: ,
+              paddingRight: 10,
               //   marginVertical: 20,
               //   marginTop: 10,
             }}>
@@ -244,21 +332,20 @@ export const Vide = () => {
               minimumTrackTintColor={'#1a306360'}
               //   minimumTrackTintColor={'tomato'}
               maximumTrackTintColor={'grey'}
-                showBallIndicator
-                ballIndicatorColor={'#1a3063'}
-                ballIndicatorHeight={10}
-                ballIndicatorWidth={50}
-                ballIndicatorPosition={0}
-                ballIndicatorTextColor={'white'}
-                // renderIndicator
-            //     shadowProps={       shadowOffsetWidth = 0,
-            //       shadowOffsetHeight = 1,
-            //       shadowOpacity = 0.22,
-            //       shadowRadius = 2.22,
-            //       elevation = 3,
-            //       shadowColor = '#000'
-            //  }
-            
+              // showBallIndicator
+              // ballIndicatorColor={'#1a3063'}
+              // ballIndicatorHeight={50}
+              // ballIndicatorWidth={5}
+              // ballIndicatorPosition={0}
+              // ballIndicatorTextColor={'white'}
+              // renderIndicator
+              //     shadowProps={       shadowOffsetWidth = 0,
+              //       shadowOffsetHeight = 1,
+              //       shadowOpacity = 0.22,
+              //       shadowRadius = 2.22,
+              //       elevation = 3,
+              //       shadowColor = '#000'
+              //  }
             />
           </View>
         </View>
