@@ -164,7 +164,6 @@ export const Vide = () => {
               // backgroundColor:"lightgrey"
             }}>
             <View>
-        {console.log(`https://lomano.go.yo.fr/${capteurs[selectedIndexCapteur]}.pdf`)}
       
               <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
                 <PDFView
@@ -194,7 +193,6 @@ export const Vide = () => {
                   name="file-alt"
                   type="font-awesome-5"
                   color="#000"
-                  onPress={() => toggleOverlay()}
                 />
                 <Text
                   style={{
