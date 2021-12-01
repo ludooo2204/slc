@@ -164,7 +164,7 @@ export const Vide = () => {
               // backgroundColor:"lightgrey"
             }}>
             <View>
-        
+        {console.log(`https://lomano.go.yo.fr/${capteurs[selectedIndexCapteur]}.pdf`)}
       
               <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
                 <PDFView
@@ -175,7 +175,7 @@ export const Vide = () => {
                   onError={error => console.log('onError', error)}
                   onLoad={() => console.log('PDF rendered from url')}
                   // resource="http://www.pdf995.com/samples/pdf.pdf"
-                  resource="https://lomano.go.yo.fr/sec02c.pdf"
+                  resource={`https://lomano.go.yo.fr/rapport_trescal/${capteurs[selectedIndexCapteur]}.pdf`}
                   resourceType="url"
                 />
               </Overlay>
@@ -184,7 +184,7 @@ export const Vide = () => {
             <View
               style={{
                 flex: 10,
-                justifyContent: 'center',
+                justifyContent: 'space-around',
                 alignItems: 'center',
                 // backgroundColor:"grey"
               }}>
@@ -329,9 +329,9 @@ export const Vide = () => {
               height={windowHeight * 0.85}
               step={0.001}
               borderRadius={10}
-              minimumTrackTintColor={'#1a306360'}
+              minimumTrackTintColor={'#2f4a87'}
               //   minimumTrackTintColor={'tomato'}
-              maximumTrackTintColor={'grey'}
+              maximumTrackTintColor={'lightgrey'}
               // showBallIndicator
               // ballIndicatorColor={'#1a3063'}
               // ballIndicatorHeight={50}
