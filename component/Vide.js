@@ -187,8 +187,12 @@ useEffect(() => {
               // backgroundColor:"lightgrey"
             }}>
             <View>
+<<<<<<< HEAD
               {/* {console.log(`https://lomano.go.yo.fr/${capteurs[selectedIndexCapteur]}.pdf`)} */}
 
+=======
+      
+>>>>>>> b091446b938c98a40302e1de1d21ef89007da747
               <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
                 <PDFView
                   style={{
@@ -217,7 +221,6 @@ useEffect(() => {
                   name="file-alt"
                   type="font-awesome-5"
                   color="#000"
-                  onPress={() => toggleOverlay()}
                 />
                 <Text
                   style={{
