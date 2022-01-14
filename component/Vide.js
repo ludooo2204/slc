@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import VerticalSlider from 'rn-vertical-slider';
 import {
   SafeAreaView,
@@ -11,7 +11,7 @@ import {
   View,
   Animated,
   Dimensions,
-  Pressable
+  Pressable,
 } from 'react-native';
 import regression from '../helpers/regression';
 import {
@@ -28,6 +28,7 @@ import {
 } from 'react-native-elements';
 // import Icon from 'react-native-vector-icons/FontAwesome';
 import PDFView from 'react-native-view-pdf';
+import axios from 'axios';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -42,6 +43,28 @@ export const Vide = () => {
   const [selectedIndexCapteur, setIndexCapteur] = useState(1);
   //   const [selectedIndexGaz, setIndexGaz] = useState(1);
   //   const [selectedIndexType, setIndexType] = useState(0);
+useEffect(() => {
+  console.log("axios gogogo")
+  // console.log(axios);
+  axios.get("https://lomano.fr/getEtalon")
+  .then(rep=>{    console.log("axios etalon")
+    // console.log(rep.data.msg)
+    let reponse= rep.data.msg
+   let videData=reponse.filter(e=>e.domaine=="VIDE")
+   console.log(videData)
+   let SEC02C_data=videData.filter(e=>e.marquage=="SEC02C")
+   let PRIM03_data=videData.filter(e=>e.marquage=="PRIM03")
+  //  let PRIM02_data=videData.filter(e=>e.marquage=="PRIM02")
+
+  let lastEtalonnageSEC02C =SEC02C_data.sort((a,b)=>b.id-a.id)[0]
+  let lastEtalonnagePRIM03 =PRIM03_data.sort((a,b)=>b.id-a.id)[0]
+  // let lastEtalonnagePRIM02 =PRIM02_data.sort((a,b)=>b.id-a.id)[0]
+  console.log(lastEtalonnagePRIM03)
+  console.log(lastEtalonnageSEC02C)
+  })
+  .catch(err=>console.log("err",err))
+}, [])
+
 
   let PIRANI = [
     [2.148, 1.3e-3, 24.5],
@@ -164,8 +187,8 @@ export const Vide = () => {
               // backgroundColor:"lightgrey"
             }}>
             <View>
-        {console.log(`https://lomano.go.yo.fr/${capteurs[selectedIndexCapteur]}.pdf`)}
-      
+              {/* {console.log(`https://lomano.go.yo.fr/${capteurs[selectedIndexCapteur]}.pdf`)} */}
+
               <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
                 <PDFView
                   style={{
@@ -242,15 +265,17 @@ export const Vide = () => {
                   style={{
                     fontSize: 40,
                     alignSelf: 'auto',
-                  }}>{`Ie = ${Number.parseFloat(debitIncertitude).toFixed(1)} %`}</Text>
+                  }}>{`Ie = ${Number.parseFloat(debitIncertitude).toFixed(
+                  1,
+                )} %`}</Text>
               </Tooltip>
-                  <Divider
-                    style={{
-                      backgroundColor: 'blue',
-                      marginVertical: 10,
-                      width: 100,
-                    }}
-                  />
+              <Divider
+                style={{
+                  backgroundColor: 'blue',
+                  marginVertical: 10,
+                  width: 100,
+                }}
+              />
               <Text
                 style={{
                   fontSize: 40,
