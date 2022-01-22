@@ -36,28 +36,32 @@ export const Vide = () => {
 
   useEffect(() => {
     if (dataComplete) {
-      console.log('dataComplete');
-      console.log(dataComplete);
-      console.log(dataComplete.data[0]);
-      console.log(dataComplete.data[1]);
+      // console.log('dataComplete');
+      // console.log(dataComplete);
+      // console.log(dataComplete.data[0]);
+      // console.log(dataComplete.data[1]);
       const resultSEC02C = regression.polynomial(dataComplete.data[0], {
         order: 4,
         precision: 12,
       });
-  
+
       const resultPRIM03 = regression.polynomial(dataComplete.data[1], {
         order: 4,
         precision: 12,
       });
-  
-   if (isNaN(resultSEC02C.equation[0])) fetchData()
-   else {
-      setModelisation({
-        resultSEC02C,
-        resultPRIM03,
-      });}
+
+      if (isNaN(resultSEC02C.equation[0])) fetchData();
+      else {
+        setModelisation({
+          resultSEC02C,
+          resultPRIM03,
+        });
+      }
     }
   }, [dataComplete]);
+  useEffect(() => {
+    if (dataComplete) setValue((dataComplete.data[selectedIndexCapteur][0][0] + dataComplete.data[selectedIndexCapteur][dataComplete.data[selectedIndexCapteur].length - 1][0]) / 2);
+  }, [selectedIndexCapteur]);
 
   useEffect(() => {
     if (modelisation) {
@@ -160,9 +164,9 @@ export const Vide = () => {
     setValueString('');
     setValue(0);
   };
-// if (wait) {
-//   return <ActivityIndicator />
-// }
+  // if (wait) {
+  //   return <ActivityIndicator />
+  // }
 
   if (modelisation) {
     return (
@@ -222,7 +226,7 @@ export const Vide = () => {
                       fontSize: 20,
                       alignSelf: 'center',
                     }}>
-                    {`${dataComplete.info[selectedIndexCapteur].numFR} du ${dataComplete.info[selectedIndexCapteur].date}`}
+                    {`${dataComplete.info[selectedIndexCapteur].numFR} du ${new Date(dataComplete.info[selectedIndexCapteur].date).toLocaleDateString('FR-fr')}`}
                   </Text>
                 </Pressable>
                 <Divider
@@ -276,13 +280,23 @@ export const Vide = () => {
                   }}
                 />
                 <Button title="Télécharger données" onPress={fetchData} />
-                <Text
-                  style={{
-                    fontSize: 40,
-                  }}>
-                  {`Brute : ${Number.parseFloat(Math.pow(10, value)).toExponential(2)} mbar`}
-                  {/* {`Tension : ${Math.round(value * 1000) / 1000} V`} */}
-                </Text>
+                <Tooltip
+                  height={150}
+                  backgroundColor={'lightblue'}
+                  overlayColor="rgba(250, 250, 250, 0.90)"
+                  popover={
+                    <View>
+                      <Text>Il s'agit de la valeur sans correction lue sur l'étalon.</Text>
+                    </View>
+                  }>
+                  <Text
+                    style={{
+                      fontSize: 40,
+                    }}>
+                    {`Lue : ${Number.parseFloat(Math.pow(10, value)).toExponential(2)} mbar`}
+                    {/* {`Tension : ${Math.round(value * 1000) / 1000} V`} */}
+                  </Text>
+                </Tooltip>
               </View>
               <View style={{flex: 1, width: '100%', padding: 10}}>
                 <View style={{flexDirection: 'row', height: '100%'}}>
@@ -302,13 +316,7 @@ export const Vide = () => {
                     errorMessage={(value != 0 && value < dataComplete.data[selectedIndexCapteur][0][0]) || value > dataComplete.data[selectedIndexCapteur][dataComplete.data[selectedIndexCapteur].length - 1][0] ? "VALEUR EN DEHORS DE LA PLAGE D'ETALONNAGE" : null}
                     keyboardType="number-pad"
                   />
-                  {console.log('value')}
-                  {console.log('value')}
-                  {console.log('value')}
-                  {console.log('value')}
-                  {console.log(value)}
-                  {console.log('dataComplete.data[selectedIndexCapteur][0][0]')}
-                  {console.log(dataComplete.data[selectedIndexCapteur][0][0])}
+
                   <Button
                     containerStyle={{
                       flex: 1,

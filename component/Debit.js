@@ -1,30 +1,8 @@
 import React, {useState} from 'react';
 
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Dimensions,
-  Pressable,
-  Text,
-  useColorScheme,
-  View,
-  Animated,
-  Alert,
-} from 'react-native';
+import {SafeAreaView, ScrollView, StatusBar, StyleSheet, Dimensions, Pressable, Text, useColorScheme, View, Animated, Alert} from 'react-native';
 import regression from '../helpers/regression';
-import {
-  CheckBox,
-  Input,
-  Button,
-  Slider,
-  Icon,
-  Tooltip,
-  ButtonGroup,
-  Divider,
-  Overlay,
-} from 'react-native-elements';
+import {CheckBox, Input, Button, Slider, Icon, Tooltip, ButtonGroup, Divider, Overlay} from 'react-native-elements';
 // import Icon from 'react-native-vector-icons/FontAwesome';
 import PDFView from 'react-native-view-pdf';
 const windowWidth = Dimensions.get('window').width;
@@ -41,13 +19,7 @@ export const Debit = () => {
   const [selectedIndexGaz, setIndexGaz] = useState(1);
   const [selectedIndexType, setIndexType] = useState(0);
   const [coefPerso, setCoefPerso] = useState(1);
-  const typeGaz = [
-    'H2-1.01',
-    'Argon-1.4',
-    'Air-1',
-    'H2 FIC-1.19',
-    'coef perso = ' + coefPerso,
-  ];
+  const typeGaz = ['H2-1.01', 'Argon-1.4', 'Air-1', 'H2 FIC-1.19', 'coef perso = ' + coefPerso];
   const coefTypeGaz = [1.01, 1.4, 1.0, 1.19, coefPerso];
   const type = ['L/min', 'kg/h'];
 
@@ -88,7 +60,7 @@ export const Debit = () => {
   for (const iterator of dataDEB003_300) {
     deb003_300_Incertitude.push([iterator[0], iterator[2]]);
   }
-  const dataIncertitude = [deb003_30_Incertitude, deb003_100_Incertitude,deb003_300_Incertitude];
+  const dataIncertitude = [deb003_30_Incertitude, deb003_100_Incertitude, deb003_300_Incertitude];
 
   const capteurs = ['DEB003-30', 'DEB003-100', 'DEB003-300'];
   const dataCapteurs = [dataDEB003_30, dataDEB003_100, dataDEB003_300];
@@ -97,13 +69,10 @@ export const Debit = () => {
     order: 4,
     precision: 12,
   });
-  const resultIncertitude = regression.polynomial(
-    dataIncertitude[selectedIndexCapteur],
-    {
-      order: 4,
-      precision: 12,
-    },
-  );
+  const resultIncertitude = regression.polynomial(dataIncertitude[selectedIndexCapteur], {
+    order: 4,
+    precision: 12,
+  });
   const updateIndexCapteur = index => {
     setIndexCapteur(index);
   };
@@ -140,9 +109,7 @@ export const Debit = () => {
   console.log('value');
   console.log(value);
   console.log(coefTypeGaz[selectedIndexGaz]);
-  const debit =
-    Math.round(result.predict(value)[1] * coefTypeGaz[selectedIndexGaz] * 100) /
-    100;
+  const debit = Math.round(result.predict(value)[1] * coefTypeGaz[selectedIndexGaz] * 100) / 100;
   //   const debit= result.predict(value)
   const debitIncertitude = resultIncertitude.predict(value)[1];
 
@@ -168,10 +135,7 @@ export const Debit = () => {
     <>
       <View style={{flex: 1}}>
         <View style={{flex: 2, margin: 10}}>
-          <Overlay
-            isVisible={overlayVisible}
-            onBackdropPress={toggleOverlay}
-            overlayStyle={{height: '20%', width: '60%', borderRadius: 30}}>
+          <Overlay isVisible={overlayVisible} onBackdropPress={toggleOverlay} overlayStyle={{height: '20%', width: '60%', borderRadius: 30}}>
             <Text
               style={{
                 flex: 1,
@@ -193,18 +157,8 @@ export const Debit = () => {
               keyboardType="number-pad"
             />
           </Overlay>
-          <ButtonGroup
-            onPress={updateIndexCapteur}
-            selectedIndex={selectedIndexCapteur}
-            buttons={capteurs}
-            containerStyle={{height: 40}}
-          />
-          <ButtonGroup
-            onPress={updateIndexGaz}
-            selectedIndex={selectedIndexGaz}
-            buttons={typeGaz}
-            containerStyle={{height: 40}}
-          />
+          <ButtonGroup onPress={updateIndexCapteur} selectedIndex={selectedIndexCapteur} buttons={capteurs} containerStyle={{height: 40}} />
+          <ButtonGroup onPress={updateIndexGaz} selectedIndex={selectedIndexGaz} buttons={typeGaz} containerStyle={{height: 40}} />
           {/* <ButtonGroup
               onPress={updateIndexType}
               selectedIndex={selectedIndexType}
@@ -229,9 +183,7 @@ export const Debit = () => {
           </Overlay>
         </View>
         <View style={{flex: 2, justifyContent: 'center', alignItems: 'center'}}>
-          <Pressable
-            style={{flexDirection: 'row'}}
-            onPress={toggleOverlayRapport}>
+          <Pressable style={{flexDirection: 'row'}} onPress={toggleOverlayRapport}>
             <Icon
               // raised
               name="file-alt"
@@ -257,44 +209,31 @@ export const Debit = () => {
               fontSize: 50,
               alignSelf: 'auto',
               //   marginTop:20
-            }}>{`${Math.round(debit * 1000) / 1000} ${
-            type[selectedIndexType]
-          }`}</Text>
-         
-          <Tooltip
-                height={200}
-                backgroundColor={'lightblue'}
-                overlayColor="rgba(250, 250, 250, 0.90)"
-                popover={
-                  <View>
-                    <Text>
-                      L'incertitude est calculé en fonction de ca et de ca
-                    </Text>
-                    <Text>
-                      L'incertitude est calculé en fonction de ca et de ca
-                    </Text>
-                    <Text>
-                      L'incertitude est calculé en fonction de ca et de ca
-                    </Text>
-                    <Text>
-                      L'incertitude est calculé en fonction de ca et de ca
-                    </Text>
-                  </View>
-                }>
-                <Text
-                  style={{
-                    fontSize: 40,
-                    alignSelf: 'auto',
-                  }}>{`Ie = ${Number.parseFloat(debitIncertitude).toFixed(2)} %`}</Text>
-              </Tooltip>
-                  <Divider
-                    style={{
-                      backgroundColor: 'blue',
-                      marginVertical: 10,
-                      width: 100,
-                    }}
-                  />
-                   <Text
+            }}>{`${Math.round(debit * 1000) / 1000} ${type[selectedIndexType]}`}</Text>
+
+          {/* <Tooltip
+            height={100}
+            backgroundColor={'lightblue'}
+            overlayColor="rgba(250, 250, 250, 0.90)"
+            popover={
+              <View>
+                <Text>Cette valeur est évaluée gràce à une modélisation polynomiale de degré 4 .</Text>
+              </View>
+            }> */}
+            <Text
+              style={{
+                fontSize: 40,
+                alignSelf: 'auto',
+              }}>{`Ie = ${Number.parseFloat(debitIncertitude).toFixed(2)} %`}</Text>
+          {/* </Tooltip> */}
+          <Divider
+            style={{
+              backgroundColor: 'blue',
+              marginVertical: 10,
+              width: 100,
+            }}
+          />
+          <Text
             style={{
               fontSize: 30,
               marginTop: 20,
@@ -320,13 +259,7 @@ export const Debit = () => {
               onChangeText={value => handleInput(value)}
               value={valueString}
               errorStyle={{color: 'red'}}
-              errorMessage={
-                value != 0 &&
-                (value > dataCapteurs[selectedIndexCapteur][5][0] ||
-                  value < dataCapteurs[selectedIndexCapteur][0][0])
-                  ? "VALEUR EN DEHORS DE LA PLAGE D'ETALONNAGE"
-                  : null
-              }
+              errorMessage={value != 0 && (value > dataCapteurs[selectedIndexCapteur][5][0] || value < dataCapteurs[selectedIndexCapteur][0][0]) ? "VALEUR EN DEHORS DE LA PLAGE D'ETALONNAGE" : null}
               keyboardType="number-pad"
             />
             <Button
@@ -353,14 +286,7 @@ export const Debit = () => {
               marginVertical: 20,
               marginTop: 10,
             }}>
-            <Slider
-              value={isNaN(value) ? 2.5 : value}
-              thumbStyle={{height: 30, width: 20, backgroundColor: '#4287f5'}}
-              onValueChange={value1 => setValue(value1)}
-              maximumValue={dataCapteurs[selectedIndexCapteur][5][0]}
-              minimumValue={dataCapteurs[selectedIndexCapteur][0][0]}
-              step={0.001}
-            />
+            <Slider value={isNaN(value) ? 2.5 : value} thumbStyle={{height: 30, width: 20, backgroundColor: '#4287f5'}} onValueChange={value1 => setValue(value1)} maximumValue={dataCapteurs[selectedIndexCapteur][5][0]} minimumValue={dataCapteurs[selectedIndexCapteur][0][0]} step={0.001} />
           </View>
         </View>
       </View>
