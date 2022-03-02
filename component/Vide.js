@@ -21,6 +21,8 @@ export const Vide = () => {
   const [visible, setVisible] = useState(false);
   const [SEC02C, setSEC02C] = useState(null);
   const [PRIM03, setPRIM03] = useState(null);
+
+  
   useEffect(() => {
     getData('dataLog').then(e => {
       if (e) {
